@@ -7,10 +7,10 @@ INSERT INTO company (nombre) VALUES
 
 --Datos de Usuarios
 INSERT INTO user (nombre, email, rol) VALUES
-('Alice', 'alice@test.com', 'rider'),
-('Bob', 'bob@test.com', 'rider'),
-('Carlos', 'carlos@test.com', 'driver'),
-('Diana', 'diana@test.com', 'driver');
+('Echenique', 'terreneitor@test.com', 'rider'),
+('Bob Esponja', 'bob_esponja@test.com', 'rider'),
+('CR7', 'omelhordomundosiuu@test.com', 'driver'),
+('Messi', 'goat@test.com', 'driver');
 
 --Datos de Conductores
 INSERT INTO driver (id_driver, id_company, rating) VALUES
