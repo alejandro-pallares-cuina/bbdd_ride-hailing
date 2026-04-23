@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
 
     COMPANY ||--o{ DRIVER : pertenece_a
@@ -22,7 +23,7 @@ erDiagram
     }
 
     DRIVER {
-        BIGINT id_driver PK, FK
+        BIGINT id_driver PK
         BIGINT id_company FK
         DECIMAL rating
     }
