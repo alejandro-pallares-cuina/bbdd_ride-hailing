@@ -1,0 +1,139 @@
+{
+  "id": null,
+  "uid": "ridehailing-business",
+  "title": "Ride-Hailing \u2014 Negocio",
+  "tags": [
+    "ride-hailing",
+    "business"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Viajes por hora",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT $__timeGroupAlias(created_at,'1h') AS time, COUNT(*) AS value FROM trip WHERE $__timeFilter(created_at) GROUP BY time ORDER BY time;"
+        }
+      ],
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Viajes (\u00faltimas 24h)",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM trip WHERE $__timeFilter(created_at);"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 9
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Viajes finalizados (24h)",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM trip WHERE estado='finalizado' AND $__timeFilter(finished_at);"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 9
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Ingresos (24h, \u20ac)",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT ROUND(COALESCE(SUM(precio_eur),0),2) AS value FROM trip WHERE estado='finalizado' AND $__timeFilter(finished_at);"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 9
+      }
+    },
+    {
+      "type": "table",
+      "title": "Tasa de aceptaci\u00f3n por conductor",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT d.id_driver AS driver_id, u.nombre AS driver_name, COUNT(*) AS offers_total, SUM(o.estado='aceptada') AS offers_accepted, ROUND(100*SUM(o.estado='aceptada')/NULLIF(COUNT(*),0),2) AS acceptance_pct FROM offer o JOIN driver d ON d.id_driver=o.id_driver JOIN user u ON u.id_user=d.id_driver WHERE $__timeFilter(o.created_at) GROUP BY d.id_driver, u.nombre ORDER BY acceptance_pct DESC, offers_total DESC;"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      }
+    },
+    {
+      "type": "table",
+      "title": "Ingresos por company",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_movilidad"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT c.id_company, c.nombre AS company, ROUND(SUM(t.precio_eur),2) AS revenue_eur, ROUND(SUM(t.precio_eur)/NULLIF(SUM(t.distancia_km),0),3) AS eur_per_km, ROUND(SUM(t.precio_eur)/NULLIF(SUM(t.duracion_min),0),3) AS eur_per_min FROM trip t JOIN driver d ON d.id_driver=t.id_driver JOIN company c ON c.id_company=d.id_company WHERE t.estado='finalizado' AND $__timeFilter(t.finished_at) GROUP BY c.id_company, c.nombre ORDER BY revenue_eur DESC;"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      }
+    }
+  ]
+}

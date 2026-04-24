@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'ride-hailing'
+    orgId: 1
+    folder: 'Ride-Hailing'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

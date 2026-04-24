@@ -1,0 +1,80 @@
+{
+  "id": null,
+  "uid": "mysql-db-health",
+  "title": "Ride-Hailing \u2014 Salud MySQL",
+  "tags": [
+    "mysql",
+    "db",
+    "monitoring"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Threads conectados (actual)",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_metrics"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT VARIABLE_VALUE AS value FROM performance_schema.global_status WHERE VARIABLE_NAME='Threads_connected';"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Transacciones InnoDB activas",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_metrics"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM information_schema.innodb_trx;"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      }
+    },
+    {
+      "type": "table",
+      "title": "Lock waits (InnoDB)",
+      "datasource": {
+        "type": "mysql",
+        "uid": "mysql_metrics"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT r.TRX_ID AS waiting_trx_id, r.TRX_STARTED AS waiting_since, r.TRX_MYSQL_THREAD_ID AS waiting_thread, b.TRX_ID AS blocking_trx_id, b.TRX_STARTED AS blocking_since, b.TRX_MYSQL_THREAD_ID AS blocking_thread, l.lock_table, l.lock_index, l.lock_mode, l.lock_type FROM information_schema.innodb_lock_waits w JOIN information_schema.innodb_trx r ON r.TRX_ID=w.requesting_trx_id JOIN information_schema.innodb_trx b ON b.TRX_ID=w.blocking_trx_id JOIN information_schema.innodb_locks l ON l.lock_id=w.requested_lock_id ORDER BY waiting_since ASC;"
+        }
+      ],
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      }
+    }
+  ]
+}
