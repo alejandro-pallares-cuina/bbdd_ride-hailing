@@ -5,7 +5,7 @@ CREATE DATABASE IF NOT EXISTS movilidad
 
 USE movilidad;
 
---Tabla de Compañias
+-- Tabla de Compañias
 CREATE TABLE company (
   id_company   BIGINT       NOT NULL AUTO_INCREMENT,
   nombre       VARCHAR(120) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE company (
   UNIQUE KEY uk_company_nombre (nombre)
 ) ENGINE=InnoDB;
 
---Tabla de Usuarios
+-- Tabla de Usuarios
 CREATE TABLE user (
   id_user      BIGINT       NOT NULL AUTO_INCREMENT,
   nombre       VARCHAR(80)  NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE user (
   UNIQUE KEY uk_user_email (email)
 ) ENGINE=InnoDB;
 
---Tabla de Conductores
+-- Tabla de Conductores
 CREATE TABLE driver (
   id_driver    BIGINT NOT NULL,
   id_company   BIGINT NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE driver (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---Tabla de Vehículos
+-- Tabla de Vehículos
 CREATE TABLE vehicle (
   id_vehicle   BIGINT       NOT NULL AUTO_INCREMENT,
   id_driver    BIGINT       NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE vehicle (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---Tabla de Viajes
+-- Tabla de Viajes
 CREATE TABLE trip (
   id_trip       BIGINT NOT NULL AUTO_INCREMENT,
 
@@ -115,8 +115,8 @@ CREATE TABLE trip (
     REFERENCES driver(id_driver)
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
---Tabla de Ofertas
+ 
+-- Tabla de Ofertas
 CREATE TABLE offer (
   id_offer     BIGINT NOT NULL AUTO_INCREMENT,
   id_trip      BIGINT NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE offer (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---Tabla de Log de Auditoría
+-- Tabla de Log de Auditoría
 CREATE TABLE audit_log (
   id_log      BIGINT NOT NULL AUTO_INCREMENT,
   entidad     VARCHAR(50),
@@ -163,7 +163,7 @@ CREATE TABLE audit_log (
   PRIMARY KEY (id_log)
 ) ENGINE=InnoDB;
 
---Tabla de Historial de Estados de Viajes
+-- Tabla de Historial de Estados de Viajes
 CREATE TABLE trip_status_history (
   id_history  BIGINT NOT NULL AUTO_INCREMENT,
   id_trip     BIGINT NOT NULL,
