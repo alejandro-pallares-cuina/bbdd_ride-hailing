@@ -8,7 +8,7 @@ services:
       MYSQL_DATABASE: movilidad
       TZ: Europe/Madrid
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql/init:/docker-entrypoint-initdb.d:ro
