@@ -96,7 +96,7 @@ CREATE USER 'backup_user'@'localhost'
 
 GRANT PROCESS, RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'backup_user'@'localhost';
 GRANT SELECT ON movilidad.*                                    TO 'backup_user'@'localhost';
-GRANT EXECUTE ON PROCEDURE movilidad.sp_backup_snapshot        TO 'backup_user'@'localhost';
+-- GRANT EXECUTE ON PROCEDURE movilidad.sp_backup_snapshot        TO 'backup_user'@'localhost';
 
 
 -- -------------------------------------------------------
@@ -167,10 +167,8 @@ ORDER BY u.User;
 -- - Restringir el host '%' a la red interna Docker en producción.
 -- - Forzar TLS: ALTER USER 'app_writer'@'%' REQUIRE SSL;
 -- -------------------------------------------------------
--- 7. db_metrics_reader — Métricas internas de MySQL (performance_schema)
+-- 7. db_metrics_reader — Métricas internas de MySQL
 -- -------------------------------------------------------
--- Usuario SOLO-LECTURA para que Grafana pueda consultar métricas del servidor
--- (threads conectados, locks, etc.) sin dar permisos de escritura.
 DROP USER IF EXISTS 'db_metrics_reader'@'%';
 CREATE USER 'db_metrics_reader'@'%'
   IDENTIFIED BY 'M3tr1cs_S3cur3!'
@@ -178,12 +176,9 @@ CREATE USER 'db_metrics_reader'@'%'
   FAILED_LOGIN_ATTEMPTS 5
   PASSWORD_LOCK_TIME 1;
 
--- Permisos de lectura en esquemas de métricas
+-- Forma correcta para MySQL 8
 GRANT SELECT ON performance_schema.* TO 'db_metrics_reader'@'%';
-GRANT SELECT ON information_schema.* TO 'db_metrics_reader'@'%';
 GRANT SELECT ON sys.* TO 'db_metrics_reader'@'%';
-
--- (Opcional) permitir a app_reader consultar métricas también
--- GRANT SELECT ON performance_schema.* TO 'app_reader'@'%';
+GRANT PROCESS ON *.* TO 'db_metrics_reader'@'%';
 
 FLUSH PRIVILEGES;

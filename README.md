@@ -3,7 +3,7 @@
 ## Requisitos
 - Docker + Docker Compose
 - Puertos libres:
-  - 3306 (MySQL)
+  - 3307 (MySQL)
   - 3000 (Grafana)
 
 ---

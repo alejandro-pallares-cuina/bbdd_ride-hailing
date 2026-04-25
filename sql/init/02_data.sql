@@ -9,16 +9,16 @@ USE movilidad;
 -- Offers: 914 (3–6 por viaje)
 
 -- Limpieza (opcional). Si quieres mantener datos existentes, comenta este bloque.
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE trip_status_history;
-TRUNCATE TABLE offer;
-TRUNCATE TABLE trip;
-TRUNCATE TABLE vehicle;
-TRUNCATE TABLE driver;
-TRUNCATE TABLE user;
-TRUNCATE TABLE company;
-TRUNCATE TABLE audit_log;
-SET FOREIGN_KEY_CHECKS = 1;
+-- SET FOREIGN_KEY_CHECKS = 0;
+-- TRUNCATE TABLE trip_status_history;
+-- TRUNCATE TABLE offer;
+-- TRUNCATE TABLE trip;
+-- TRUNCATE TABLE vehicle;
+-- TRUNCATE TABLE driver;
+-- TRUNCATE TABLE user;
+-- TRUNCATE TABLE company;
+-- TRUNCATE TABLE audit_log;
+-- SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO company (id_company, nombre) VALUES
 (1, 'FastRide'),
