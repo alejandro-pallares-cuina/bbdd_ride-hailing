@@ -10,20 +10,7 @@
 
 USE movilidad;
 
--- Recomendación: evitar lecturas sucias en operativa
--- (InnoDB por defecto usa REPEATABLE READ; READ COMMITTED suele ir bien para APIs).
--- Ajustad según necesidad.
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-
--- -------------------------------------------------------------------
--- 0) Utilidades comunes
--- -------------------------------------------------------------------
-
--- 0.1 Insertar auditoría (patrón)
--- INSERT INTO audit_log(entidad, id_entidad, accion) VALUES ('trip', 123, 'CREATED');
-
--- 0.2 Registrar historial de estado de viaje (patrón)
--- INSERT INTO trip_status_history(id_trip, estado) VALUES (123, 'solicitado');
 
 -- -------------------------------------------------------------------
 -- 1) Usuarios (riders / drivers)
@@ -35,7 +22,7 @@ SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 INSERT INTO user (nombre, email, rol)
 VALUES (?, ?, 'rider');
 
--- (opcional) auditoría del alta
+-- auditoría del alta
 -- SET @new_user_id = LAST_INSERT_ID();
 -- INSERT INTO audit_log(entidad, id_entidad, accion) VALUES ('user', @new_user_id, 'CREATED_RIDER');
 
@@ -96,8 +83,8 @@ ORDER BY v.created_at DESC;
 
 -- -------------------------------------------------------------------
 -- 4) Viajes (trips)
--- Tabla: trip(id_trip, id_rider, id_driver, estado, origen/destino, ... ) schema
--- Historial: trip_status_history(...)  schema
+-- Tabla: trip(id_trip, id_rider, id_driver, estado, origen/destino, ... ) 
+-- Historial: trip_status_history(...) 
 -- -------------------------------------------------------------------
 
 -- 4.1 Solicitar viaje (crear trip en estado 'solicitado' + historial + auditoría)
@@ -161,12 +148,7 @@ LIMIT ? OFFSET ?;
 -- Importante: UNIQUE(id_trip, id_driver) evita duplicar oferta por driver schema
 -- -------------------------------------------------------------------
 
--- 5.1 Crear ofertas para un viaje a una lista de conductores
--- Opción A: multi-values (cuando ya tenéis la lista en la app)
--- Parámetros: (id_trip, id_driver_1) ... (id_trip, id_driver_n)
--- INSERT INTO offer (id_trip, id_driver) VALUES (?, ?), (?, ?), ...;
-
--- Opción B: crear ofertas desde un SELECT (cuando la selección se hace en SQL)
+-- 5.1 crear ofertas desde un SELECT (cuando la selección se hace en SQL)
 -- Ejemplo: enviar a N conductores mejor valorados de una company concreta
 -- Parámetros: (id_trip, id_company, N)
 INSERT INTO offer (id_trip, id_driver)
@@ -333,7 +315,7 @@ COMMIT;
 -- 7.3 Cancelar viaje (rider) si aún no ha empezado
 -- Reglas típicas:
 -- - Si está 'solicitado': cancelar y expirar ofertas.
--- - Si está 'aceptado': cancelar (opcional: penalización) y cerrar ofertas.
+-- - Si está 'aceptado': cancelar y cerrar ofertas.
 -- Parámetros: (id_trip, id_rider)
 START TRANSACTION;
 
